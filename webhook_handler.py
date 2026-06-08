@@ -13,6 +13,29 @@ async def root():
 async def health():
     return {"status": "running", "account": "@career_goals36"}
 
+@router.get("/debug-token")
+async def debug_token():
+    """Call this URL to instantly check if your Instagram token is valid."""
+    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, verify_token
+    import requests
+    ok, data = verify_token()
+    
+    # Also check if IG account is reachable
+    ig_check = requests.get(
+        f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}",
+        params={"fields": "id,name,username", "access_token": ACCESS_TOKEN},
+        timeout=15
+    ).json()
+    
+    return {
+        "token_valid": ok,
+        "token_first_20": ACCESS_TOKEN[:20] if ACCESS_TOKEN else "EMPTY",
+        "token_length": len(ACCESS_TOKEN) if ACCESS_TOKEN else 0,
+        "me_result": data,
+        "ig_account_check": ig_check
+    }
+
+
 @router.get("/webhook")
 async def verify_webhook(request: Request):
     mode = request.query_params.get("hub.mode")
