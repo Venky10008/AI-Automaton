@@ -3,9 +3,38 @@ import requests
 import time
 
 # Credentials
-ACCESS_TOKEN = os.environ.get("INSTAGRAM_ACCESS_TOKEN")
+_USER_TOKEN = os.environ.get("INSTAGRAM_ACCESS_TOKEN")
 IG_ACCOUNT_ID = os.environ.get("INSTAGRAM_BUSINESS_ACCOUNT_ID")
 IMGBB_API_KEY = os.environ.get("IMGBB_API_KEY")
+
+def _get_page_access_token():
+    """
+    Exchange the User Token for the correct Page Access Token.
+    Instagram Graph API requires a Page token to publish media.
+    """
+    try:
+        # Get list of pages the user manages
+        r = requests.get(
+            "https://graph.facebook.com/v22.0/me/accounts",
+            params={"access_token": _USER_TOKEN},
+            timeout=15
+        )
+        data = r.json()
+        pages = data.get("data", [])
+        if pages:
+            # Return the first page's access token
+            page_token = pages[0]["access_token"]
+            print(f"Page Access Token obtained for: {pages[0]['name']}")
+            return page_token
+    except Exception as e:
+        print(f"Page token fetch error: {e}")
+    # Fallback to user token
+    print("Warning: Using User Token directly (may fail for some endpoints)")
+    return _USER_TOKEN
+
+# Get the correct token on module load
+ACCESS_TOKEN = _get_page_access_token()
+
 
 def upload_to_imgbb(image_path):
     from image_builder import compress_image
