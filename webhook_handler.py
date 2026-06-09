@@ -54,6 +54,14 @@ async def debug_page_token():
         "pages": pages
     }
 
+@router.get("/test-dm")
+async def test_dm(user_id: str = ""):
+    from instagram_api import send_dm
+    if not user_id:
+        return {"error": "Provide ?user_id=... (Instagram user ID to send test DM to)"}
+    ok = send_dm(user_id, f"Hey! This is a test DM from Career Goals 36 bot 🤖 DM working! ✅")
+    return {"user_id": user_id, "dm_sent": ok}
+
 
 @router.get("/webhook")
 async def verify_webhook(request: Request):
