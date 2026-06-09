@@ -131,6 +131,23 @@ async def run_comment_processor(comment_id, username, user_id, post_id, page_id)
     import asyncio
     await asyncio.to_thread(process_new_comment, comment_id, username, user_id, post_id, page_id)
 
+@router.get("/renew-webhook")
+async def renew_webhook():
+    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID
+    import requests
+
+    r = requests.post(
+        f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}/subscribed_apps",
+        params={
+            "subscribed_fields": "comments,mentions",
+            "access_token": ACCESS_TOKEN
+        },
+        timeout=15
+    )
+    data = r.json()
+    print(f"Webhook renew result: {data}")
+    return {"status": "success" if "success" in data else "check_logs", "response": data}
+
 @router.get("/trigger-post")
 async def trigger_post(post_type: str = "AI"):
     from scheduler import run_9am_post, run_8pm_post
