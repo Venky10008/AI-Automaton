@@ -62,6 +62,31 @@ async def test_dm(user_id: str = ""):
     ok = send_dm(user_id, f"Hey! This is a test DM from Career Goals 36 bot 🤖 DM working! ✅")
     return {"user_id": user_id, "dm_sent": ok}
 
+@router.get("/debug-dm")
+async def debug_dm():
+    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, _PAGE_TOKEN, PAGE_ID
+    import requests
+
+    # Check if Page Access Token is set
+    results = {
+        "ig_account_id": IG_ACCOUNT_ID,
+        "page_id": PAGE_ID,
+        "has_page_token": bool(_PAGE_TOKEN),
+        "page_token_first_20": _PAGE_TOKEN[:20] + "..." if _PAGE_TOKEN else "NOT SET",
+        "user_token_first_20": ACCESS_TOKEN[:20] + "...",
+    }
+
+    # Test whoami with Page Token
+    if _PAGE_TOKEN:
+        r = requests.get(
+            "https://graph.facebook.com/v22.0/me",
+            params={"access_token": _PAGE_TOKEN},
+            timeout=10
+        )
+        results["page_token_me"] = r.json()
+
+    return results
+
 
 @router.get("/webhook")
 async def verify_webhook(request: Request):
