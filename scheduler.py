@@ -73,11 +73,14 @@ Built for: {content['what_line3']}
         for img in images:
             if os.path.exists(img):
                 os.remove(img)
+                print(f"Cleaned up {img}")
             comp_img = img.replace(".png", "_compressed.jpg")
             if os.path.exists(comp_img):
                 os.remove(comp_img)
+                print(f"Cleaned up {comp_img}")
         if os.path.exists(story_img):
             os.remove(story_img)
+            print(f"Cleaned up {story_img}")
 
         print(f"[{datetime.datetime.now()}] 9AM AI Post Pipeline SUCCESS - Post ID: {post_id}")
     except Exception as e:
@@ -151,11 +154,14 @@ Built for: {content['what_line3']}
         for img in images:
             if os.path.exists(img):
                 os.remove(img)
+                print(f"Cleaned up {img}")
             comp_img = img.replace(".png", "_compressed.jpg")
             if os.path.exists(comp_img):
                 os.remove(comp_img)
+                print(f"Cleaned up {comp_img}")
         if os.path.exists(story_img):
             os.remove(story_img)
+            print(f"Cleaned up {story_img}")
 
         print(f"[{datetime.datetime.now()}] 8PM Student Post Pipeline SUCCESS - Post ID: {post_id}")
     except Exception as e:

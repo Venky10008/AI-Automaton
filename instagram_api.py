@@ -64,7 +64,7 @@ def upload_to_imgbb(image_path):
 
         response = requests.post(
             "https://api.imgbb.com/1/upload",
-            data={"key": IMGBB_API_KEY, "image": b64, "expiration": 600},
+            data={"key": IMGBB_API_KEY, "image": b64},
             timeout=30
         )
         data = response.json()
