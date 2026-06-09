@@ -153,6 +153,35 @@ async def renew_webhook():
 
     return {"status": "success" if "success" in data else "check_logs", "response": data, "using_page_id": bool(PAGE_ID)}
 
+@router.get("/token-info")
+async def token_info():
+    from instagram_api import ACCESS_TOKEN, _PAGE_TOKEN, IG_ACCOUNT_ID
+    import requests
+
+    result = {"user_token_set": bool(ACCESS_TOKEN), "page_token_set": bool(_PAGE_TOKEN), "ig_account_id": IG_ACCOUNT_ID}
+
+    if ACCESS_TOKEN:
+        try:
+            r = requests.get("https://graph.facebook.com/v22.0/me",
+                params={"access_token": ACCESS_TOKEN},
+                timeout=10
+            )
+            result["user_token_test"] = r.json()
+        except Exception as e:
+            result["user_token_error"] = str(e)
+
+    if _PAGE_TOKEN:
+        try:
+            r = requests.get("https://graph.facebook.com/v22.0/me",
+                params={"access_token": _PAGE_TOKEN},
+                timeout=10
+            )
+            result["page_token_test"] = r.json()
+        except Exception as e:
+            result["page_token_error"] = str(e)
+
+    return result
+
 @router.get("/trigger-post")
 async def trigger_post(post_type: str = "AI"):
     from scheduler import run_9am_post, run_8pm_post
