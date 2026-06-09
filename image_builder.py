@@ -64,6 +64,46 @@ def get_pexels_background(topic):
         print(f"Pexels fetch failed: {e}")
     return ""
 
+async def build_story_image(topic, hook_text, post_type, output_path="story.png"):
+    from slide_templates import template_story, colorize_keywords
+
+    topic_icons = {
+        'ai_tool': '🤖', 'research': '🤖', 'ai': '🤖',
+        'github': '💻', 'internship': '🏢', 'hackathon': '🏆',
+        'jobs': '🚀', 'course': '📚', 'fellowship': '🎓'
+    }
+
+    import datetime
+    day_idx = datetime.datetime.now().weekday()
+    themes = [
+        {"accent": "#00FFFF", "glow": "0,255,255", "badge": "CYBER DROP"},
+        {"accent": "#B040FF", "glow": "176,64,255", "badge": "SPACE DROP"},
+        {"accent": "#FFD700", "glow": "255,215,0", "badge": "GOLD DROP"},
+        {"accent": "#39FF14", "glow": "57,255,20", "badge": "MATRIX DROP"},
+        {"accent": "#FF4500", "glow": "255,69,0", "badge": "FIRE DROP"},
+        {"accent": "#00FFB3", "glow": "0,255,179", "badge": "AURORA DROP"},
+        {"accent": "#F7E7CE", "glow": "247,231,206", "badge": "PURE DROP"}
+    ]
+    theme = themes[day_idx]
+    topic_icon = topic_icons.get(str(topic).lower(), '🤖')
+
+    html = template_story(hook_text, topic_icon, theme["accent"], theme["glow"], theme["badge"])
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
+            args=["--no-sandbox", "--disable-dev-shm-usage"]
+        )
+        page = await browser.new_page(
+            viewport={"width": 1080, "height": 1920}
+        )
+        await page.set_content(html)
+        await page.wait_for_load_state("networkidle")
+        await page.wait_for_timeout(2000)
+        await page.screenshot(path=output_path, type="png")
+        await browser.close()
+    print(f"Generated story image: {output_path}")
+    return output_path
+
 async def build_slides(topic, hook_text, what_line1, what_line2, what_line3, steps, points, post_type, prefix="slide"):
     from slide_templates import (get_template_for_topic, build_slide1_overlay, 
                                  get_slide2_overlay, get_slide3_overlay, 

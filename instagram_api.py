@@ -7,6 +7,10 @@ _USER_TOKEN = (os.environ.get("INSTAGRAM_ACCESS_TOKEN") or "").strip()
 IG_ACCOUNT_ID = (os.environ.get("INSTAGRAM_BUSINESS_ACCOUNT_ID") or "").strip()
 IMGBB_API_KEY = (os.environ.get("IMGBB_API_KEY") or "").strip()
 
+# Page Access Token for DMs — separate from User Token used for content publishing
+_PAGE_TOKEN = (os.environ.get("PAGE_ACCESS_TOKEN") or "").strip()
+PAGE_ID = (os.environ.get("PAGE_ID") or "").strip()
+
 # ── On startup: print token info so we can see it in Railway logs ──────────────
 if _USER_TOKEN:
     print(f"[TOKEN] Loaded. First 20 chars: {_USER_TOKEN[:20]}... Last 10: ...{_USER_TOKEN[-10:]}")
@@ -127,12 +131,15 @@ def post_carousel_to_instagram(image_urls, caption):
 
 
 def send_dm(user_id, message_text):
+    dm_token = _PAGE_TOKEN or ACCESS_TOKEN
+    dm_id = PAGE_ID or IG_ACCOUNT_ID
+
     r = requests.post(
-        f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}/messages",
+        f"https://graph.facebook.com/v22.0/{dm_id}/messages",
+        params={"access_token": dm_token},
         json={
             "recipient": {"id": user_id},
-            "message": {"text": message_text},
-            "access_token": ACCESS_TOKEN
+            "message": {"text": message_text}
         },
         timeout=15
     )

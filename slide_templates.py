@@ -624,6 +624,110 @@ body {{width:1080px;height:1080px;overflow:hidden;background:#000;}}
 </body>
 </html>"""
 
+def template_story(hook_text, topic_icon, accent, glow, badge):
+    hook_html = colorize_keywords(hook_text, accent)
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* {{margin:0;padding:0;box-sizing:border-box;}}
+body {{width:1080px;height:1920px;overflow:hidden;background:#000;font-family:'Montserrat',sans-serif;}}
+.story {{
+    width:1080px;height:1920px;position:relative;
+    background:radial-gradient(ellipse at 50% 30%, #001a3a 0%, #000510 60%, #000000 100%);
+}}
+.grid {{
+    position:absolute;inset:0;
+    background-image:
+        linear-gradient(rgba(0,255,255,0.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,255,0.025) 1px,transparent 1px);
+    background-size:60px 60px;
+}}
+.glow {{
+    position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+    width:800px;height:800px;border-radius:50%;
+    background:radial-gradient(circle, rgba(0,255,255,0.15) 0%, transparent 70%);
+    pointer-events:none;
+}}
+.badge {{
+    position:absolute;top:60px;left:50%;transform:translateX(-50%);
+    background:rgba(0,0,0,0.65);border:1px solid rgba({glow},0.5);
+    border-radius:50px;padding:12px 30px;
+    font-size:28px;font-weight:700;color:rgba(255,255,255,0.9);
+    display:flex;align-items:center;gap:12px;
+    backdrop-filter:blur(8px);z-index:100;
+}}
+.badge-dot {{
+    width:12px;height:12px;border-radius:50%;
+    background:{accent};box-shadow:0 0 8px {accent};
+}}
+.icon {{
+    position:absolute;top:240px;left:50%;transform:translateX(-50%);
+    font-size:160px;z-index:100;
+    filter:drop-shadow(0 0 40px rgba({glow},0.8));
+}}
+.hook {{
+    position:absolute;top:500px;left:60px;right:60px;z-index:100;
+    font-family:'Bebas Neue',cursive;font-size:120px;color:white;line-height:1.05;
+    text-align:center;letter-spacing:2px;
+    text-shadow:0 0 50px rgba({glow},0.6), 0 3px 20px rgba(0,0,0,1);
+}}
+.line {{
+    position:absolute;top:750px;left:50%;transform:translateX(-50%);
+    width:120px;height:6px;background:{accent};
+    box-shadow:0 0 15px rgba({glow},0.8);border-radius:3px;z-index:100;
+}}
+.cta {{
+    position:absolute;top:820px;left:60px;right:60px;z-index:100;
+    text-align:center;
+}}
+.cta-text {{
+    color:white;font-size:48px;font-weight:800;line-height:1.4;
+}}
+.cta-highlight {{
+    color:{accent};font-size:52px;font-weight:900;
+}}
+.follow-box {{
+    position:absolute;bottom:100px;left:80px;right:80px;z-index:100;
+    background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);
+    border:1px solid rgba({glow},0.3);border-radius:24px;
+    padding:40px;text-align:center;
+}}
+.follow-handle {{
+    font-family:'Bebas Neue',cursive;font-size:64px;color:white;
+}}
+.follow-sub {{
+    font-size:30px;color:rgba(255,255,255,0.6);margin-top:8px;
+}}
+.gradient-bottom {{
+    position:absolute;bottom:0;left:0;right:0;height:50%;
+    background:linear-gradient(transparent,rgba(0,0,0,0.95));
+}}
+</style>
+</head>
+<body>
+<div class="story">
+    <div class="grid"></div>
+    <div class="glow"></div>
+    <div class="gradient-bottom"></div>
+    <div class="badge"><div class="badge-dot"></div>{badge}</div>
+    <div class="icon">{topic_icon}</div>
+    <div class="hook">{hook_html}</div>
+    <div class="line"></div>
+    <div class="cta">
+        <div class="cta-text">👇 Comment & Follow to get the link!</div>
+        <div class="cta-highlight">New post just dropped ⚡</div>
+    </div>
+    <div class="follow-box">
+        <div class="follow-handle">@career_goals36</div>
+        <div class="follow-sub">Daily AI Tools & Student Resources 🔥</div>
+    </div>
+</div>
+</body>
+</html>"""
+
 def get_template_for_topic(topic):
     topic = str(topic).lower()
     if topic in ['ai_tool', 'research', 'ai']: return template_neural

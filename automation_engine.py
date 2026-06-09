@@ -91,11 +91,10 @@ def process_new_comment(comment_id, username, user_id, post_id, page_id="me"):
     like_comment(comment_id)
     send_reply(comment_id, reply_text)
 
-    # 7. Send DM
-    dm_success = send_dm(user_id, dm_text)
-
-    # 8. Log to prevent duplicates (Only if they received the link)
+    # 7. Send DM only to followers (Instagram blocks unsolicited DMs to non-followers)
     if is_follower:
+        dm_success = send_dm(user_id, dm_text)
         log_dm_sent(username, post_id)
+        return dm_success
 
-    return dm_success
+    return True

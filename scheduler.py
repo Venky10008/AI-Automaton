@@ -3,7 +3,7 @@ import os
 import traceback
 import datetime
 from content_engine import generate_ai_content, generate_student_content
-from image_builder import build_slides
+from image_builder import build_slides, build_story_image
 from instagram_api import upload_to_imgbb, post_carousel_to_instagram, post_story
 from database import save_post
 
@@ -59,9 +59,12 @@ Built for: {content['what_line3']}
         # 6. Post Carousel
         post_id = post_carousel_to_instagram(image_urls, caption)
 
-        # 7. Post Story (Use slide 1)
-        if image_urls:
-            post_story(image_urls[0])
+        # 7. Post Story (dedicated 9:16 story image promoting the post)
+        story_img = "ai_story.png"
+        await build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img)
+        story_url = upload_to_imgbb(story_img)
+        if story_url:
+            post_story(story_url)
 
         # 8. Save to DB
         save_post(post_id, content['topic'], content['source_link'], content['post_type'])
@@ -73,6 +76,8 @@ Built for: {content['what_line3']}
             comp_img = img.replace(".png", "_compressed.jpg")
             if os.path.exists(comp_img):
                 os.remove(comp_img)
+        if os.path.exists(story_img):
+            os.remove(story_img)
 
         print(f"[{datetime.datetime.now()}] 9AM AI Post Pipeline SUCCESS - Post ID: {post_id}")
     except Exception as e:
@@ -132,9 +137,12 @@ Built for: {content['what_line3']}
         # 6. Post Carousel
         post_id = post_carousel_to_instagram(image_urls, caption)
 
-        # 7. Post Story (Use slide 1)
-        if image_urls:
-            post_story(image_urls[0])
+        # 7. Post Story (dedicated 9:16 story image promoting the post)
+        story_img = "student_story.png"
+        await build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img)
+        story_url = upload_to_imgbb(story_img)
+        if story_url:
+            post_story(story_url)
 
         # 8. Save to DB
         save_post(post_id, content['topic'], content['source_link'], content['post_type'])
@@ -146,6 +154,8 @@ Built for: {content['what_line3']}
             comp_img = img.replace(".png", "_compressed.jpg")
             if os.path.exists(comp_img):
                 os.remove(comp_img)
+        if os.path.exists(story_img):
+            os.remove(story_img)
 
         print(f"[{datetime.datetime.now()}] 8PM Student Post Pipeline SUCCESS - Post ID: {post_id}")
     except Exception as e:

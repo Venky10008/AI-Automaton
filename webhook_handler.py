@@ -20,7 +20,6 @@ async def debug_token():
     import requests
     ok, data = verify_token()
     
-    # Also check if IG account is reachable
     ig_check = requests.get(
         f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}",
         params={"fields": "id,name,username", "access_token": ACCESS_TOKEN},
@@ -33,6 +32,26 @@ async def debug_token():
         "token_length": len(ACCESS_TOKEN) if ACCESS_TOKEN else 0,
         "me_result": data,
         "ig_account_check": ig_check
+    }
+
+@router.get("/debug-page-token")
+async def debug_page_token():
+    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID
+    import requests
+
+    pages = requests.get(
+        "https://graph.facebook.com/v22.0/me/accounts",
+        params={
+            "fields": "id,name,access_token,instagram_business_account{id,username}",
+            "access_token": ACCESS_TOKEN
+        },
+        timeout=15
+    ).json()
+
+    return {
+        "note": "Use the 'access_token' from the page that has your instagram_business_account as your NEW Page Access Token in Railway. Also use 'id' as PAGE_ID if needed.",
+        "current_ig_account_id": IG_ACCOUNT_ID,
+        "pages": pages
     }
 
 
