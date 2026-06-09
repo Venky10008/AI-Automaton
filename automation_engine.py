@@ -51,7 +51,7 @@ REPLY_8PM = [
 ]
 
 def process_new_comment(comment_id, username, user_id, post_id, page_id="me"):
-    print(f"Processing @{username} on post {post_id}")
+    print(f"Processing @{username} (user_id: {user_id}) on post {post_id}")
 
     # 1. Skip duplicates
     if has_dm_been_sent(username, post_id):
