@@ -61,7 +61,7 @@ Built for: {content['what_line3']}
 
         # 7. Post Story (dedicated 9:16 story image promoting the post)
         story_img = "ai_story.png"
-        await build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img)
+        asyncio.run(build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img))
         story_url = upload_to_imgbb(story_img)
         if story_url:
             post_story(story_url)
@@ -139,7 +139,7 @@ Built for: {content['what_line3']}
 
         # 7. Post Story (dedicated 9:16 story image promoting the post)
         story_img = "student_story.png"
-        await build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img)
+        asyncio.run(build_story_image(content['topic'], content['hook_text'], content['post_type'], story_img))
         story_url = upload_to_imgbb(story_img)
         if story_url:
             post_story(story_url)
