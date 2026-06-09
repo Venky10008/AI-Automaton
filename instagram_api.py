@@ -222,6 +222,7 @@ def check_is_follower(user_id):
             data = r.json()
             if "is_user_follow_business" in data:
                 return data["is_user_follow_business"]
+        print(f"Follower check failed ({r.status_code}): {r.json()}")
     except Exception as e:
         print(f"Follower check error: {e}")
-    return True
+    return False
