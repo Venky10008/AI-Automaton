@@ -169,7 +169,7 @@ def setup_scheduler():
     scheduler = BackgroundScheduler(timezone=pytz.timezone('Asia/Kolkata'))
     
     # 9 AM IST AI Post
-    scheduler.add_job(run_9am_post, 'cron', hour=10, minute=35)
+    scheduler.add_job(run_9am_post, 'cron', hour=9, minute=0)
     
     # 8 PM IST Student Post
     scheduler.add_job(run_8pm_post, 'cron', hour=20, minute=0)
