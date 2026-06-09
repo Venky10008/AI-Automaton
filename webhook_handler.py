@@ -130,3 +130,14 @@ async def handle_webhook(request: Request):
 async def run_comment_processor(comment_id, username, user_id, post_id, page_id):
     import asyncio
     await asyncio.to_thread(process_new_comment, comment_id, username, user_id, post_id, page_id)
+
+@router.get("/trigger-post")
+async def trigger_post(post_type: str = "AI"):
+    from scheduler import run_9am_post, run_8pm_post
+    import threading
+    if post_type.upper() == "AI":
+        threading.Thread(target=run_9am_post, daemon=True).start()
+        return {"status": "triggered", "post_type": "AI (9AM)"}
+    else:
+        threading.Thread(target=run_8pm_post, daemon=True).start()
+        return {"status": "triggered", "post_type": "STUDENT (8PM)"}
