@@ -630,96 +630,120 @@ def template_story(hook_text, topic_icon, accent, glow, badge):
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@700;800;900&display=swap');
 * {{margin:0;padding:0;box-sizing:border-box;}}
 body {{width:1080px;height:1920px;overflow:hidden;background:#000;font-family:'Montserrat',sans-serif;}}
 .story {{
     width:1080px;height:1920px;position:relative;
-    background:radial-gradient(ellipse at 50% 30%, #001a3a 0%, #000510 60%, #000000 100%);
+    background:radial-gradient(ellipse at 50% 25%, #001a3a 0%, #000a1a 35%, #000208 65%, #000 100%);
+}}
+.accent-glow {{
+    position:absolute;top:-200px;left:50%;transform:translateX(-50%);
+    width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba({glow},0.2) 0%, rgba({glow},0.08) 30%, transparent 70%);
+    pointer-events:none;
+}}
+.corner-glow {{
+    position:absolute;bottom:-150px;right:-150px;
+    width:500px;height:500px;border-radius:50%;
+    background:radial-gradient(circle, rgba({glow},0.1) 0%, transparent 70%);
+    pointer-events:none;
 }}
 .grid {{
     position:absolute;inset:0;
     background-image:
-        linear-gradient(rgba(0,255,255,0.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,255,255,0.025) 1px,transparent 1px);
-    background-size:60px 60px;
-}}
-.glow {{
-    position:absolute;top:-100px;left:50%;transform:translateX(-50%);
-    width:800px;height:800px;border-radius:50%;
-    background:radial-gradient(circle, rgba(0,255,255,0.15) 0%, transparent 70%);
-    pointer-events:none;
+        linear-gradient(rgba({glow},0.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba({glow},0.03) 1px,transparent 1px);
+    background-size:50px 50px;
 }}
 .badge {{
-    position:absolute;top:60px;left:50%;transform:translateX(-50%);
-    background:rgba(0,0,0,0.65);border:1px solid rgba({glow},0.5);
-    border-radius:50px;padding:12px 30px;
-    font-size:28px;font-weight:700;color:rgba(255,255,255,0.9);
-    display:flex;align-items:center;gap:12px;
-    backdrop-filter:blur(8px);z-index:100;
+    position:absolute;top:70px;left:50%;transform:translateX(-50%);z-index:100;
+    background:rgba(0,0,0,0.7);border:1.5px solid rgba({glow},0.5);
+    border-radius:50px;padding:14px 35px;
+    font-size:26px;font-weight:800;color:white;letter-spacing:3px;
+    display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px);
 }}
 .badge-dot {{
-    width:12px;height:12px;border-radius:50%;
-    background:{accent};box-shadow:0 0 8px {accent};
+    width:10px;height:10px;border-radius:50%;background:{accent};
+    box-shadow:0 0 12px {accent};animation:pulse 1.5s ease-in-out infinite;
 }}
+@keyframes pulse {{ 0%,100%{{opacity:1;}} 50%{{opacity:0.4;}} }}
 .icon {{
-    position:absolute;top:240px;left:50%;transform:translateX(-50%);
-    font-size:160px;z-index:100;
-    filter:drop-shadow(0 0 40px rgba({glow},0.8));
+    position:absolute;top:260px;left:50%;transform:translateX(-50%);z-index:100;
+    font-size:180px;filter:drop-shadow(0 0 50px rgba({glow},0.9));
+    animation:float 3s ease-in-out infinite;
 }}
+@keyframes float {{ 0%,100%{{transform:translateX(-50%) translateY(0);}} 50%{{transform:translateX(-50%) translateY(-15px);}} }}
 .hook {{
-    position:absolute;top:500px;left:60px;right:60px;z-index:100;
-    font-family:'Bebas Neue',cursive;font-size:120px;color:white;line-height:1.05;
-    text-align:center;letter-spacing:2px;
-    text-shadow:0 0 50px rgba({glow},0.6), 0 3px 20px rgba(0,0,0,1);
+    position:absolute;top:560px;left:40px;right:40px;z-index:100;
+    font-family:'Bebas Neue',cursive;font-size:130px;color:white;line-height:1.05;
+    text-align:center;letter-spacing:3px;
+    text-shadow:0 0 60px rgba({glow},0.5), 0 4px 30px rgba(0,0,0,1);
 }}
 .line {{
-    position:absolute;top:750px;left:50%;transform:translateX(-50%);
-    width:120px;height:6px;background:{accent};
-    box-shadow:0 0 15px rgba({glow},0.8);border-radius:3px;z-index:100;
+    position:absolute;top:830px;left:50%;transform:translateX(-50%);z-index:100;
+    width:150px;height:5px;background:{accent};
+    box-shadow:0 0 20px rgba({glow},0.8);border-radius:3px;
 }}
-.cta {{
-    position:absolute;top:820px;left:60px;right:60px;z-index:100;
+.cta-section {{
+    position:absolute;top:900px;left:60px;right:60px;z-index:100;
     text-align:center;
 }}
-.cta-text {{
-    color:white;font-size:48px;font-weight:800;line-height:1.4;
+.cta-main {{
+    color:white;font-size:56px;font-weight:800;line-height:1.4;
+    text-shadow:0 0 20px rgba(0,0,0,0.8);
 }}
 .cta-highlight {{
-    color:{accent};font-size:52px;font-weight:900;
+    color:{accent};font-size:60px;font-weight:900;
+    text-shadow:0 0 30px rgba({glow},0.6);
+}}
+.arrow {{
+    position:absolute;top:1060px;left:50%;transform:translateX(-50%);z-index:100;
+    font-size:80px;filter:drop-shadow(0 0 20px rgba({glow},0.5));
 }}
 .follow-box {{
-    position:absolute;bottom:100px;left:80px;right:80px;z-index:100;
-    background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);
-    border:1px solid rgba({glow},0.3);border-radius:24px;
-    padding:40px;text-align:center;
+    position:absolute;bottom:140px;left:70px;right:70px;z-index:100;
+    background:linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05));
+    backdrop-filter:blur(20px);
+    border:1.5px solid rgba({glow},0.3);border-radius:28px;
+    padding:45px 40px;text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
 }}
 .follow-handle {{
-    font-family:'Bebas Neue',cursive;font-size:64px;color:white;
+    font-family:'Bebas Neue',cursive;font-size:72px;color:white;letter-spacing:3px;
 }}
 .follow-sub {{
-    font-size:30px;color:rgba(255,255,255,0.6);margin-top:8px;
+    font-size:32px;color:rgba(255,255,255,0.7);margin-top:10px;font-weight:600;
 }}
 .gradient-bottom {{
-    position:absolute;bottom:0;left:0;right:0;height:50%;
+    position:absolute;bottom:0;left:0;right:0;height:45%;
     background:linear-gradient(transparent,rgba(0,0,0,0.95));
+}}
+.orb {{
+    position:absolute;top:500px;left:50%;transform:translateX(-50%);
+    width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle, rgba({glow},0.06) 0%, transparent 70%);
+    filter:blur(40px);pointer-events:none;
 }}
 </style>
 </head>
 <body>
 <div class="story">
     <div class="grid"></div>
-    <div class="glow"></div>
+    <div class="accent-glow"></div>
+    <div class="corner-glow"></div>
+    <div class="orb"></div>
     <div class="gradient-bottom"></div>
     <div class="badge"><div class="badge-dot"></div>{badge}</div>
     <div class="icon">{topic_icon}</div>
     <div class="hook">{hook_html}</div>
     <div class="line"></div>
-    <div class="cta">
-        <div class="cta-text">👇 Comment & Follow to get the link!</div>
+    <div class="cta-section">
+        <div class="cta-main">👇 Drop a comment & follow</div>
         <div class="cta-highlight">New post just dropped ⚡</div>
     </div>
+    <div class="arrow">⬇️</div>
     <div class="follow-box">
         <div class="follow-handle">@career_goals36</div>
         <div class="follow-sub">Daily AI Tools & Student Resources 🔥</div>
@@ -809,28 +833,41 @@ def get_slide4_overlay(heading, points, topic_icon, accent, glow):
     <div style="position:absolute;bottom:40px;right:60px;z-index:100;font-family:'Montserrat',sans-serif;font-size:24px;color:rgba(255,255,255,0.4);font-weight:600;">@career_goals36</div>
     """
 
-def get_slide5_overlay(post_type, accent, glow):
+def get_slide5_overlay(post_type, accent, glow, source_link=""):
     if post_type == "AI":
         cta_word = "AI"
-        tag_text = "👇 What do you think about this?"
+        tag_text = "👇 Drop 'AI' in comments!"
         follow_sub = "Daily AI drops 🔥"
     else:
         cta_word = "SEND"
         tag_text = "👇 Tag a friend who needs this!"
         follow_sub = "Daily AI + Student drops 🔥"
 
+    url_display = source_link if len(source_link) < 50 else source_link[:47] + "..."
+
     return f"""
     <div style="position:absolute;inset:0;background:rgba(0,0,0,0.72);z-index:50;"></div>
-    <div style="position:absolute;top:100px;left:0;right:0;text-align:center;z-index:100;font-family:'Bebas Neue',cursive;font-size:108px;color:white;text-shadow:0 0 40px rgba({glow},0.8);">WANT THE LINK? 🔗</div>
-    <div style="position:absolute;top:260px;left:60px;right:60px;z-index:100;background:rgba({glow},0.12);border:2px solid {accent};border-radius:24px;padding:50px 40px;display:flex;flex-direction:column;gap:25px;text-align:center;">
-        <div style="color:white;font-family:'Montserrat',sans-serif;font-size:50px;font-weight:800;">💬 Comment "{cta_word}" below</div>
-        <div style="color:white;font-family:'Montserrat',sans-serif;font-size:50px;font-weight:800;">📩 I'll DM you the link in 5 mins!</div>
-        <div style="color:#FFB800;font-family:'Montserrat',sans-serif;font-size:40px;font-weight:700;margin-top:10px;">⚠️ Follow first — DMs only reach followers!</div>
+
+    <div style="position:absolute;top:80px;left:0;right:0;text-align:center;z-index:100;font-family:'Bebas Neue',cursive;font-size:96px;color:white;text-shadow:0 0 40px rgba({glow},0.8);">HERE'S THE LINK 🔗</div>
+
+    <div style="position:absolute;top:220px;left:60px;right:60px;z-index:100;background:rgba(0,0,0,0.85);border:2px solid {accent};border-radius:24px;padding:30px 40px;text-align:center;box-shadow:0 0 40px rgba({glow},0.2);">
+        <div style="color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:22px;font-weight:600;letter-spacing:2px;margin-bottom:10px;">🔗 LINK</div>
+        <div style="word-break:break-all;color:{accent};font-family:'Montserrat',sans-serif;font-size:32px;font-weight:700;">{url_display}</div>
     </div>
-    <div style="position:absolute;top:620px;left:200px;right:200px;height:4px;background:linear-gradient(90deg,transparent,{accent},transparent);z-index:100;"></div>
-    <div style="position:absolute;top:680px;left:0;right:0;text-align:center;z-index:100;color:white;font-family:'Montserrat',sans-serif;font-size:40px;font-weight:700;">{tag_text}</div>
-    <div style="position:absolute;bottom:100px;left:150px;right:150px;z-index:100;background:white;border-radius:20px;padding:30px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
-        <div style="color:black;font-family:'Bebas Neue',cursive;font-size:52px;line-height:1;">FOLLOW @career_goals36</div>
-        <div style="color:#333;font-family:'Montserrat',sans-serif;font-size:28px;font-weight:600;margin-top:5px;">{follow_sub}</div>
+
+    <div style="position:absolute;top:410px;left:60px;right:60px;z-index:100;display:flex;flex-direction:column;gap:20px;">
+        <div style="background:rgba({glow},0.12);border:1px solid rgba({glow},0.3);border-radius:16px;padding:25px;text-align:center;">
+            <div style="color:white;font-family:'Montserrat',sans-serif;font-size:44px;font-weight:800;">💬 Comment "{cta_word}"</div>
+            <div style="color:rgba(255,255,255,0.6);font-family:'Montserrat',sans-serif;font-size:28px;font-weight:600;margin-top:5px;">Boost reach & help others 🔄</div>
+        </div>
+        <div style="background:rgba({glow},0.12);border:1px solid rgba({glow},0.3);border-radius:16px;padding:25px;text-align:center;">
+            <div style="color:white;font-family:'Montserrat',sans-serif;font-size:44px;font-weight:800;">🔁 Share with a friend</div>
+            <div style="color:rgba(255,255,255,0.6);font-family:'Montserrat',sans-serif;font-size:28px;font-weight:600;margin-top:5px;">They'll thank you later!</div>
+        </div>
+    </div>
+
+    <div style="position:absolute;bottom:80px;left:60px;right:60px;z-index:100;background:white;border-radius:20px;padding:25px 30px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+        <div style="color:black;font-family:'Bebas Neue',cursive;font-size:56px;line-height:1;">FOLLOW @career_goals36</div>
+        <div style="color:#333;font-family:'Montserrat',sans-serif;font-size:26px;font-weight:600;margin-top:5px;">{follow_sub}</div>
     </div>
     """

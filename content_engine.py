@@ -112,11 +112,19 @@ def generate_ai_content():
         "topic": "ai_tool",
         "post_type": "AI",
         "hook_text": random.choice(hooks),
-        "what_line1": raw['title'][:40] + "...",
-        "what_line2": raw['description'][:60] + "...",
-        "what_line3": "Developers & Researchers",
-        "steps": ["Go to the secret link", "Install the free package", "Run it on your local machine"],
-        "points": ["Saves 10+ hours per week", "Everyone with a laptop", "Full automation of boring tasks"],
+        "what_line1": raw['title'][:45],
+        "what_line2": raw['description'][:65],
+        "what_line3": "Developers & Researchers 🧠",
+        "steps": [
+            "Visit the link in the next slide",
+            "Explore the tool/resource",
+            "Start using it right away 🚀"
+        ],
+        "points": [
+            "Saves hours of manual work ⏱️",
+            "Anyone with a laptop can use it 💻",
+            "The future is already here 🌍"
+        ],
         "source_link": raw['url'],
         "caption_hook": random.choice(hooks)
     }
@@ -147,11 +155,19 @@ def generate_student_content():
         "topic": topic,
         "post_type": "STUDENT",
         "hook_text": hook,
-        "what_line1": raw['title'][:40] + "...",
-        "what_line2": raw['description'][:60] + "...",
-        "what_line3": "Computer Science Students",
-        "steps": ["Click the link in DMs", "Create a free account", "Apply with your resume"],
-        "points": ["Huge resume boost", "Freshers looking for jobs", "Get hired faster"],
+        "what_line1": raw['title'][:45],
+        "what_line2": raw['description'][:65],
+        "what_line3": "CS Students & Freshers 🎓",
+        "steps": [
+            "Open the link from the post",
+            "Create your account/profile",
+            "Apply or start learning today 💪"
+        ],
+        "points": [
+            "Huge boost for your resume 📄",
+            "Perfect for students & freshers 👨‍🎓",
+            "Don't miss this opportunity 🎯"
+        ],
         "source_link": raw['url'],
         "caption_hook": hook
     }

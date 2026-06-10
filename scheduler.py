@@ -25,6 +25,7 @@ def run_9am_post():
             steps=content['steps'],
             points=content['points'],
             post_type=content['post_type'],
+            source_link=content['source_link'],
             prefix="ai_slide"
         ))
 
@@ -42,10 +43,11 @@ def run_9am_post():
 
 Built for: {content['what_line3']}
 
-💬 Comment "AI" below 👇
-📩 I'll DM you the link in 5 minutes!
-⚠️ Follow first — DMs only reach followers!
-💾 Save this post so you don't lose it!
+🔗 Link in the carousel 👉 swipe right!
+💬 Comment "AI" to boost reach!
+🔁 Share with someone who needs this!
+💾 Save for later!
+📌 Follow @career_goals36 for daily drops!
 
 #AITools #ArtificialIntelligence #NewAI #AIUpdate
 #MachineLearning #AIForBeginners #TechNews #FutureOfAI
@@ -104,6 +106,7 @@ def run_8pm_post():
             steps=content['steps'],
             points=content['points'],
             post_type=content['post_type'],
+            source_link=content['source_link'],
             prefix="student_slide"
         ))
 
@@ -121,11 +124,11 @@ def run_8pm_post():
 
 Built for: {content['what_line3']}
 
-💬 Comment "SEND" below 👇
-📩 I'll DM you the link in 5 minutes!
-⚠️ Follow first — DMs only reach followers!
+🔗 Link in the carousel 👉 swipe right!
+💬 Comment "SEND" to boost reach!
 🔁 Tag a friend who needs this!
 💾 Save before it gets buried!
+📌 Follow @career_goals36 for daily drops!
 
 #StudentLife #CSStudents #Internship2025
 #HackathonIndia #FreeResources #GitHubTips

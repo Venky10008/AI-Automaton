@@ -1,6 +1,5 @@
 import os
 from fastapi import APIRouter, Request, Response
-from automation_engine import process_new_comment
 
 router = APIRouter()
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "AI_PRO_HUB")
@@ -15,7 +14,6 @@ async def health():
 
 @router.get("/debug-token")
 async def debug_token():
-    """Call this URL to instantly check if your Instagram token is valid."""
     from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, verify_token
     import requests
     ok, data = verify_token()
@@ -53,111 +51,6 @@ async def debug_page_token():
         "current_ig_account_id": IG_ACCOUNT_ID,
         "pages": pages
     }
-
-@router.get("/test-dm")
-async def test_dm(user_id: str = ""):
-    from instagram_api import send_dm
-    if not user_id:
-        return {"error": "Provide ?user_id=... (Instagram user ID to send test DM to)"}
-    ok = send_dm(user_id, f"Hey! This is a test DM from Career Goals 36 bot 🤖 DM working! ✅")
-    return {"user_id": user_id, "dm_sent": ok}
-
-@router.get("/debug-dm")
-async def debug_dm():
-    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, _PAGE_TOKEN, PAGE_ID
-    import requests
-
-    # Check if Page Access Token is set
-    results = {
-        "ig_account_id": IG_ACCOUNT_ID,
-        "page_id": PAGE_ID,
-        "has_page_token": bool(_PAGE_TOKEN),
-        "page_token_first_20": _PAGE_TOKEN[:20] + "..." if _PAGE_TOKEN else "NOT SET",
-        "user_token_first_20": ACCESS_TOKEN[:20] + "...",
-    }
-
-    # Test whoami with Page Token
-    if _PAGE_TOKEN:
-        r = requests.get(
-            "https://graph.facebook.com/v22.0/me",
-            params={"access_token": _PAGE_TOKEN},
-            timeout=10
-        )
-        results["page_token_me"] = r.json()
-
-    return results
-
-
-@router.get("/webhook")
-async def verify_webhook(request: Request):
-    mode = request.query_params.get("hub.mode")
-    token = request.query_params.get("hub.verify_token")
-    challenge = request.query_params.get("hub.challenge")
-
-    if mode and token:
-        if mode == "subscribe" and token == VERIFY_TOKEN:
-            print("WEBHOOK_VERIFIED")
-            return Response(content=challenge, status_code=200)
-        else:
-            return Response(status_code=403)
-    return Response(status_code=400)
-
-@router.post("/webhook")
-async def handle_webhook(request: Request):
-    body = await request.json()
-    
-    if body.get("object") == "instagram":
-        for entry in body.get("entry", []):
-            page_id = entry.get("id")
-            for change in entry.get("changes", []):
-                if change.get("field") == "comments":
-                    value = change.get("value", {})
-                    
-                    comment_id = value.get("id")
-                    username = value.get("from", {}).get("username")
-                    user_id = value.get("from", {}).get("id")
-                    post_id = value.get("media", {}).get("id")
-                    
-                    if comment_id and username and user_id and post_id:
-                        # Process comment asynchronously to return 200 OK fast
-                        import asyncio
-                        asyncio.create_task(
-                            run_comment_processor(comment_id, username, user_id, post_id, page_id)
-                        )
-    
-    return {"status": "success"}
-
-async def run_comment_processor(comment_id, username, user_id, post_id, page_id):
-    import asyncio
-    await asyncio.to_thread(process_new_comment, comment_id, username, user_id, post_id, page_id)
-
-@router.get("/renew-webhook")
-async def renew_webhook():
-    from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, _PAGE_TOKEN, PAGE_ID
-    import requests
-
-    results = {}
-
-    if IG_ACCOUNT_ID:
-        # Try User Token first (may have better Instagram permissions)
-        for label, token in [("user_token", ACCESS_TOKEN), ("page_token", _PAGE_TOKEN)]:
-            if not token:
-                continue
-            r = requests.post(
-                f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}/subscribed_apps",
-                params={
-                    "subscribed_fields": "comments,mentions",
-                    "access_token": token
-                },
-                timeout=15
-            )
-            data = r.json()
-            results[f"ig_subscription_{label}"] = data
-            print(f"Webhook renew result ({label}): {data}")
-            if "success" in data:
-                break
-
-    return {"results": results}
 
 @router.get("/token-info")
 async def token_info():

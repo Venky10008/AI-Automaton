@@ -104,7 +104,7 @@ async def build_story_image(topic, hook_text, post_type, output_path="story.png"
     print(f"Generated story image: {output_path}")
     return output_path
 
-async def build_slides(topic, hook_text, what_line1, what_line2, what_line3, steps, points, post_type, prefix="slide"):
+async def build_slides(topic, hook_text, what_line1, what_line2, what_line3, steps, points, post_type, source_link="", prefix="slide"):
     from slide_templates import (get_template_for_topic, build_slide1_overlay, 
                                  get_slide2_overlay, get_slide3_overlay, 
                                  get_slide4_overlay, get_slide5_overlay)
@@ -155,7 +155,7 @@ async def build_slides(topic, hook_text, what_line1, what_line2, what_line3, ste
     html4 = template_func(accent, glow, badge, overlay4, "")
     
     # Slide 5
-    overlay5 = get_slide5_overlay(post_type, accent, glow)
+    overlay5 = get_slide5_overlay(post_type, accent, glow, source_link)
     html5 = template_func(accent, glow, badge, overlay5, "")
 
     images = []

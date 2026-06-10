@@ -130,53 +130,6 @@ def post_carousel_to_instagram(image_urls, caption):
     return real_post_id
 
 
-def send_dm(user_id, message_text):
-    dm_token = _PAGE_TOKEN or ACCESS_TOKEN
-    dm_id = PAGE_ID or IG_ACCOUNT_ID
-
-    r = requests.post(
-        f"https://graph.facebook.com/v22.0/{dm_id}/messages",
-        params={"access_token": dm_token},
-        json={
-            "recipient": {"id": user_id},
-            "message": {"text": message_text}
-        },
-        timeout=15
-    )
-    if r.status_code == 200:
-        print(f"DM sent successfully")
-        return True
-    print(f"DM failed: {r.status_code} {r.json()}")
-    return False
-
-
-def send_reply(comment_id, message):
-    r = requests.post(
-        f"https://graph.facebook.com/v22.0/{comment_id}/replies",
-        params={"access_token": ACCESS_TOKEN},
-        json={"message": message},
-        timeout=15
-    )
-    if r.status_code == 200:
-        print(f"Public reply sent")
-        return True
-    print(f"Reply failed: {r.status_code} {r.json()}")
-    return False
-
-
-def like_comment(comment_id):
-    r = requests.post(
-        f"https://graph.facebook.com/v22.0/{comment_id}/likes",
-        params={"access_token": ACCESS_TOKEN},
-        timeout=15
-    )
-    if r.status_code == 200:
-        print(f"Comment liked")
-        return True
-    print(f"Like failed: {r.status_code} {r.json()}")
-    return False
-
-
 def post_story(image_url):
     r = requests.post(
         f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}/media",
@@ -206,28 +159,3 @@ def post_story(image_url):
 
     print(f"Story POSTED! ID: {data['id']}")
     return True
-
-
-def check_is_follower(user_id):
-    # Try Page Token first (more reliable for is_user_follow_business), fall back to User Token
-    tokens_to_try = [_PAGE_TOKEN, ACCESS_TOKEN] if _PAGE_TOKEN else [ACCESS_TOKEN]
-    for token in tokens_to_try:
-        if not token:
-            continue
-        try:
-            r = requests.get(
-                f"https://graph.facebook.com/v22.0/{user_id}",
-                params={
-                    "fields": "is_user_follow_business",
-                    "access_token": token
-                },
-                timeout=15
-            )
-            if r.status_code == 200:
-                data = r.json()
-                if "is_user_follow_business" in data:
-                    return data["is_user_follow_business"]
-            print(f"Follower check failed ({r.status_code}): {r.json()}")
-        except Exception as e:
-            print(f"Follower check error with token: {e}")
-    return False
