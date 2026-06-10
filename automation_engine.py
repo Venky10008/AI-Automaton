@@ -39,7 +39,8 @@ def process_new_comment(comment_id, username, user_id, post_id, page_id="me"):
     like_comment(comment_id)
     send_reply(comment_id, reply_text)
 
-    # 7. Mark as processed
-    log_dm_sent(username, post_id)
+    # 7. Mark as processed only if link was delivered (so user can re-comment after following)
+    if is_follower:
+        log_dm_sent(username, post_id)
 
     return True

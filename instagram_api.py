@@ -209,20 +209,25 @@ def post_story(image_url):
 
 
 def check_is_follower(user_id):
-    try:
-        r = requests.get(
-            f"https://graph.facebook.com/v22.0/{user_id}",
-            params={
-                "fields": "is_user_follow_business",
-                "access_token": ACCESS_TOKEN
-            },
-            timeout=15
-        )
-        if r.status_code == 200:
-            data = r.json()
-            if "is_user_follow_business" in data:
-                return data["is_user_follow_business"]
-        print(f"Follower check failed ({r.status_code}): {r.json()}")
-    except Exception as e:
-        print(f"Follower check error: {e}")
+    # Try Page Token first (more reliable for is_user_follow_business), fall back to User Token
+    tokens_to_try = [_PAGE_TOKEN, ACCESS_TOKEN] if _PAGE_TOKEN else [ACCESS_TOKEN]
+    for token in tokens_to_try:
+        if not token:
+            continue
+        try:
+            r = requests.get(
+                f"https://graph.facebook.com/v22.0/{user_id}",
+                params={
+                    "fields": "is_user_follow_business",
+                    "access_token": token
+                },
+                timeout=15
+            )
+            if r.status_code == 200:
+                data = r.json()
+                if "is_user_follow_business" in data:
+                    return data["is_user_follow_business"]
+            print(f"Follower check failed ({r.status_code}): {r.json()}")
+        except Exception as e:
+            print(f"Follower check error with token: {e}")
     return False
