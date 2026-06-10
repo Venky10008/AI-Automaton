@@ -136,22 +136,25 @@ async def renew_webhook():
     from instagram_api import ACCESS_TOKEN, IG_ACCOUNT_ID, _PAGE_TOKEN, PAGE_ID
     import requests
 
-    # Try with Page Access Token first (most reliable)
-    token = _PAGE_TOKEN or ACCESS_TOKEN
-    pid = PAGE_ID or IG_ACCOUNT_ID
+    results = {}
 
-    r = requests.post(
-        f"https://graph.facebook.com/v22.0/{pid}/subscribed_apps",
-        params={
-            "subscribed_fields": "comments,mentions",
-            "access_token": token
-        },
-        timeout=15
-    )
-    data = r.json()
-    print(f"Webhook renew result (page): {data}")
+    # Instagram comments require subscribing via the Instagram Business Account ID
+    # with a Page Access Token (not User Token)
+    if IG_ACCOUNT_ID:
+        token = _PAGE_TOKEN or ACCESS_TOKEN
+        r = requests.post(
+            f"https://graph.facebook.com/v22.0/{IG_ACCOUNT_ID}/subscribed_apps",
+            params={
+                "subscribed_fields": "comments,mentions",
+                "access_token": token
+            },
+            timeout=15
+        )
+        data = r.json()
+        results["ig_subscription"] = data
+        print(f"Webhook renew result (IG account): {data}")
 
-    return {"status": "success" if "success" in data else "check_logs", "response": data, "using_page_id": bool(PAGE_ID)}
+    return {"status": "success" if "success" in str(results) else "check_logs", "results": results}
 
 @router.get("/token-info")
 async def token_info():
